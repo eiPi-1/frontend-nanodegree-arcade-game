@@ -83,6 +83,15 @@ var Engine = (function(global) {
         // checkCollisions();
     }
 
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            if (Math.pow(enemy.x - player.x, 2) + Math.pow(enemy.y - player.y, 2) < 10);
+            {
+                return true;
+            }
+        });
+    }
+
     /* This is called by the update function  and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
