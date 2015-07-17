@@ -21,8 +21,10 @@ Enemy.prototype.update = function(dt) {
     this.x = this.x + this.speed * dt;
     if (this.x > 505) 
     {
-       this.x = Math.random() * (-65 + 95) -95;
-       this.speed = Math.random() * (70 - 35) +35;
+       //this.x = Math.random() * (-65 + 95) -95;
+       this.x = randInt(-65, -95);
+       //this.speed = Math.random() * (70 - 35) +35;
+       this.speed = randInt(70, 35);
     }
 }
 
@@ -42,12 +44,16 @@ var Player = function(x, y, speed) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+    this.sprite_id = 0;
+    this.sprites = ['images/char-boy.png', 'images/char-cat-girl.png', 'images/char-horn-girl.png', 'images/char-pink-girl.png', 'images/char-princess-girl.png'];
     this.sprite = 'images/char-boy.png';
     this.x = x;
     this.y = y;
     this.orig_x = x;
     this.orig_y = y;
     this.speed = speed;
+    this.points = 0;
+    this.gems = 0;
 }
 
 Player.prototype.update = function() {
@@ -60,6 +66,28 @@ Player.prototype.update = function() {
 // Draw the enemy on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.fillStyle = 'white';
+    ctx.fillRect( 350, 10, 450, 30);
+    ctx.fillStyle = 'black';
+    ctx.font = " 22px sans-serif";
+    ctx.fillText('points : '.concat(this.points.toString()).concat(' gems : ').concat(this.gems.toString()), 10, 40);
+}
+
+Player.prototype.reset = function() {
+    this.x = this.orig_x; 
+    this.y = this.orig_y; 
+}
+
+Player.prototype.restart = function() {
+    this.points = 0;
+    this.x = this.orig_x; 
+    this.y = this.orig_y; 
+}
+
+Player.prototype.changeHero = function() {
+    this.sprite_id++;
+    this.sprite_id = this.sprite_id % this.sprites.length;
+    this.sprite = this.sprites[this.sprite_id];
 }
 
 Player.prototype.handleInput = function(allowedKeys) {
@@ -93,8 +121,9 @@ Player.prototype.handleInput = function(allowedKeys) {
         }
         else
         {
-          this.y = this.orig_y; 
-          this.x = this.orig_x; 
+          // reached the water -> reset and give point
+          this.points++;
+          this.reset()
         }
             
     }
@@ -109,6 +138,12 @@ Player.prototype.handleInput = function(allowedKeys) {
           this.y = 430;  
         }
     }
+    else if (allowedKeys == 'changeHero')
+    {
+        this.sprite_id++;
+        this.sprite_id = this.sprite_id % this.sprites.length;
+        this.sprite = this.sprites[this.sprite_id];
+    }
 }
 
 var randInt = function(min, max)
@@ -119,8 +154,8 @@ var randInt = function(min, max)
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var player = new Player(290, 290, 10);
-var allEnemies = [new Enemy(30, 60, 40), new Enemy(320, 130, 35), new Enemy(230, 210, 38), new Enemy(180, 60, 63), new Enemy(60, 130, 45), new Enemy(-10, 210, 41)];
+var player = new Player(300, 300, 10);
+var allEnemies = [new Enemy(30, 30, 40), new Enemy(320, 150, 35), new Enemy(230, 190, 38), new Enemy(160, 65, 63), new Enemy(60, 100, 45), new Enemy(-10, 220, 41)];
 
 
 // This listens for key presses and sends the keys to your
@@ -130,7 +165,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        67: 'changeHero'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);

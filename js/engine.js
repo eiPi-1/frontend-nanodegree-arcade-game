@@ -80,15 +80,17 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     function checkCollisions() {
         allEnemies.forEach(function(enemy) {
-            if (Math.pow(enemy.x - player.x, 2) + Math.pow(enemy.y - player.y, 2) < 10);
-            {
-                return true;
+            var dist = Math.sqrt(Math.pow(enemy.x - player.x, 2) + Math.pow(enemy.y - player.y, 2));
+            
+            if (dist < 30){
+                player.restart();
             }
+            
         });
     }
 
