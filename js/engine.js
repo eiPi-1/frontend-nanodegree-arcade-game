@@ -88,7 +88,7 @@ var Engine = (function(global) {
             var dist = Math.sqrt(Math.pow(enemy.x - player.x, 2) + Math.pow(enemy.y - player.y, 2));
             
             if (dist < 30){
-                player.restart();
+                player.gameOver();
             }
             
         });
@@ -172,6 +172,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -183,7 +184,14 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
     ]);
     Resources.onReady(init);
 
@@ -192,4 +200,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.canvas = canvas;
 })(this);

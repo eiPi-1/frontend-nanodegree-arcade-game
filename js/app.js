@@ -1,3 +1,15 @@
+var MovingSprite = function(x, y, speed, sprite) {
+    this.sprite = sprite;
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+}
+
+// Draw the sprite on the screen, required method for game
+MovingSprite.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -5,11 +17,10 @@ var Enemy = function(x, y, speed) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
+    MovingSprite.call(this, x, y, speed, 'images/enemy-bug.png');
 }
+
+Enemy.prototype = Object.create(MovingSprite.prototype);
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -19,23 +30,16 @@ Enemy.prototype.update = function(dt) {
     // all computers.
 
     this.x = this.x + this.speed * dt;
+
+    // if enemy reached the end of the canvas
+    // loop back from some random distance before
+    // beginning of the canvas
     if (this.x > 505) 
     {
-       //this.x = Math.random() * (-65 + 95) -95;
        this.x = randInt(-65, -95);
-       //this.speed = Math.random() * (70 - 35) +35;
        this.speed = randInt(70, 35);
     }
 }
-
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
 // Enemies our player must avoid
 var Player = function(x, y, speed) {
@@ -44,17 +48,16 @@ var Player = function(x, y, speed) {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+    MovingSprite.call(this, x, y, speed, 'images/char-boy.png');    
     this.sprite_id = 0;
     this.sprites = ['images/char-boy.png', 'images/char-cat-girl.png', 'images/char-horn-girl.png', 'images/char-pink-girl.png', 'images/char-princess-girl.png'];
-    this.sprite = 'images/char-boy.png';
-    this.x = x;
-    this.y = y;
     this.orig_x = x;
     this.orig_y = y;
-    this.speed = speed;
     this.points = 0;
     this.gems = 0;
 }
+
+Player.prototype = Object.create(MovingSprite.prototype);
 
 Player.prototype.update = function() {
     // You should multiply any movement by the dt parameter
@@ -66,11 +69,12 @@ Player.prototype.update = function() {
 // Draw the enemy on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.textAlign = "left";
     ctx.fillStyle = 'white';
-    ctx.fillRect( 350, 10, 450, 30);
+    ctx.fillRect( 5, 5, 150, 40);
     ctx.fillStyle = 'black';
     ctx.font = " 22px sans-serif";
-    ctx.fillText('points : '.concat(this.points.toString()).concat(' gems : ').concat(this.gems.toString()), 10, 40);
+    ctx.fillText('points : '.concat(this.points.toString()), 10, 30);
 }
 
 Player.prototype.reset = function() {
@@ -78,7 +82,7 @@ Player.prototype.reset = function() {
     this.y = this.orig_y; 
 }
 
-Player.prototype.restart = function() {
+Player.prototype.gameOver = function() {
     this.points = 0;
     this.x = this.orig_x; 
     this.y = this.orig_y; 
@@ -154,7 +158,7 @@ var randInt = function(min, max)
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var player = new Player(300, 300, 10);
+var player = new Player(200, 350, 10);
 var allEnemies = [new Enemy(30, 30, 40), new Enemy(320, 150, 35), new Enemy(230, 190, 38), new Enemy(160, 65, 63), new Enemy(60, 100, 45), new Enemy(-10, 220, 41)];
 
 
