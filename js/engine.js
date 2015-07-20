@@ -57,7 +57,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -84,6 +84,7 @@ var Engine = (function(global) {
     }
 
     function checkCollisions() {
+        // detects a collision if an enemy is within a distance less than some radius
         allEnemies.forEach(function(enemy) {
             var dist = Math.sqrt(Math.pow(enemy.x - player.x, 2) + Math.pow(enemy.y - player.y, 2));
             
@@ -91,6 +92,17 @@ var Engine = (function(global) {
                 player.gameOver();
             }
             
+        });
+
+        // check if the player was able to pick the gem
+        gems.forEach(function(gem) {
+            var dist = Math.sqrt(Math.pow(gem.x - player.x, 2) + Math.pow(gem.y - player.y, 2));
+
+            if (dist < 25){
+                player.addHP();
+                // if gem was picked make it disappear
+                gem.disappear();
+            }
         });
     }
 
@@ -105,6 +117,11 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+
+        gems.forEach(function(gem) {
+            gem.update(dt);
+        });
+    
         player.update();
     }
 
@@ -161,6 +178,10 @@ var Engine = (function(global) {
          */
         allEnemies.forEach(function(enemy) {
             enemy.render();
+        });
+
+        gems.forEach(function(gem) {
+            gem.render();
         });
 
         player.render();
