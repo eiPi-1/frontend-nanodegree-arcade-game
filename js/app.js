@@ -85,8 +85,6 @@ Gem.prototype = Object.create(MovingSprite.prototype);
 // Declaring the constructor
 Gem.prototype.constructor = Gem;
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
 Gem.prototype.update = function(dt) {
     // Similarly to enemy here dt helps to make
     // the time the gem stays visible independen of
