@@ -210,13 +210,13 @@ Player.prototype.handleInput = function(allowedKeys) {
     }  else if (allowedKeys == 'right'){
         //console.log(this.sprite_id);
         //console.log(this.speed_x);
-        if (this.x + this.speed < 420){
+        if (this.x + this.speed < 400){
             this.x = this.x + this.speed_x;
         } else{
-          this.x = 435;  
+          this.x = 400;  
         }
     } else if (allowedKeys == 'up'){
-        if (this.y - this.speed > 10){
+        if (this.y - this.speed > 30){
             this.y = this.y - this.speed_y;
         } else{
           // reached the water -> reset position and give point

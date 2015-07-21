@@ -86,19 +86,38 @@ var Engine = (function(global) {
     function checkCollisions() {
         // detects a collision if an enemy is within a distance less than some radius
         allEnemies.forEach(function(enemy) {
-            var dist = Math.sqrt(Math.pow(enemy.x - player.x, 2) + Math.pow(enemy.y - player.y, 2));
+            var dist_x = Math.sqrt(Math.pow(enemy.x - player.x, 2));
+            var dist_y  = Math.sqrt(Math.pow(enemy.y - player.y, 2));
             
-            if (dist < 30){
-                player.gameOver();
+            // if bug bumps into player with it's front side then
+            // collision is more strict thank if player bumps into
+            // bug's rear. That means that collision is detected on
+            // front at a greater distance than at the back
+            if (player.x > enemy.x){
+                if (player.y < enemy.y){
+                    if (dist_x < 50 && dist_y < 45 ){
+                        player.gameOver();
+                    }
+                } else {
+                    if (dist_x < 50 && dist_y < 30){
+                        player.gameOver();
+                    }
+                }
+            } else{
+                if (dist_x < 40 && dist_y < 30){
+                    player.gameOver();
+                }
             }
+            
             
         });
 
         // check if the player was able to pick the gem
         gems.forEach(function(gem) {
-            var dist = Math.sqrt(Math.pow(gem.x - player.x, 2) + Math.pow(gem.y - player.y, 2));
+            var dist_x = Math.sqrt(Math.pow(gem.x - player.x, 2));
+            var dist_y = Math.sqrt(Math.pow(gem.y - player.y, 2));
 
-            if (dist < 25){
+            if (dist_x < 55 && dist_y < 85){
                 player.addHP();
                 // if gem was picked make it disappear
                 gem.disappear();
